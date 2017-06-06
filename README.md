@@ -18,4 +18,4 @@ lisp.R > (+ 1 1)
 
 This is a toy project that I used to become more familiar with R environments.
 
-To stay close to the python code I have implemented a (two-sided) stack. This puts much of the environment handling code out of the interpreter.
+To stay close to the python code I have implemented a (two-sided) stack. This takes much of the environment handling code out of the interpreter.
