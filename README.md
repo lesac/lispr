@@ -7,6 +7,9 @@ A small proof-of-concept for a scheme interpreter in R modelled on Peter Norvig'
 ```r
 source('lispr.R')
 repl()
+```
+Example session:
+```r
 lisp.R > (+ 1 1)
 [1] 2
 ```
