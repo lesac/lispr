@@ -1,7 +1,11 @@
 # Implements Peter Norvig's scheme interpreter lispy in R
 # For his python interpreter see http://www.norvig.com/lispy.html
 
-# to mimic pythons pop on lists we create our own stack
+# Creates a two-sided stack out of a vector data
+# Output: environment with functions
+# pop, rpop: retrieve and remove last/first element
+# rpeek: retrieve first element without deleting
+# len: length of stack
 create_twosided_stack <- function (data) {
     stack <- new.env()
     stack$.Data <- data
@@ -46,7 +50,9 @@ create_env <- function (lst) {
     envir
 }
 
+# tokenize returns a stack containing the tokens in chars
 tokenize <- function(chars) {
+    # cut at whitespace and filter empty strings
     tokens <- Filter(function (x) nchar(x) > 0,
                      strsplit(gsub('(', ' ( ', gsub(')', ' ) ', chars, fixed = TRUE), fixed = TRUE), " ", fixed = TRUE)[[1]])
     create_twosided_stack(tokens)
@@ -84,11 +90,6 @@ parse <- function(program) {
     reader(tokenize(program))[[1]]
 }
 
-global_env <- create_env(list(
-    '+' = `+`,
-    '-' = `-`,
-    '*' = `*`))
-
 issymbol <- function(x) {
     is.character(x)
 }
@@ -101,6 +102,16 @@ isnumber <- function(x) {
     is.numeric(x)
 }
 
+global_env <- create_env(list(
+    '+' = `+`,
+    '-' = `-`,
+    '*' = `*`))
+
+# evaluation rules:
+# 1. symbols load their function from envir
+# 2. non-symbols evaluate to themselves (numbers)
+# 3. define defines variables in the environment
+# 4. lists apply their first element to the rest
 scheme_eval <- function(x, envir = global_env) {
     if (issymbol(x)) {
         envir$get(x)
